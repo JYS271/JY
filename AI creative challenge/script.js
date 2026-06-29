@@ -85,7 +85,7 @@ function buildPile() {
     setEmoji(el, f.emoji);
     el.style.left = posOf(i) + "%";
     el.style.setProperty("--rot", jitter[i] + "deg");
-    el.style.bottom = (i % 2 === 0 ? 0 : 14) + "px";
+    el.style.bottom = (i % 2 === 0 ? 0 : 7) + "px"; // 이모지를 7px씩 위아래로 엇갈리게
     el.style.zIndex = String(i % 2 === 0 ? 3 : 4); // 겹쳐 쌓인 더미 느낌
     pile.appendChild(el);
     toys.push(el);
