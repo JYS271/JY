@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="인형뽑기로 보는 오늘의 운세" />
+  <title>오늘의 운세 뽑기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="machine" role="application" aria-label="오늘의 운세 뽑기 기계">
+    <h1 class="title">오늘의 운세 뽑기</h1>
+
+    <!-- 유리 케이스 -->
+    <section class="case" aria-label="뽑기 케이스">
+      <div class="case-frame">
+        <!-- 배경 인형 (흐릿한 장식) -->
+        <div class="backdrop" aria-hidden="true">
+          <span class="plush plush-1"></span>
+          <span class="plush plush-2"></span>
+          <span class="plush plush-3"></span>
+        </div>
+
+        <!-- 집게 -->
+        <div class="crane" id="crane" aria-hidden="true">
+          <div class="cable" id="cable"></div>
+          <div class="claw" id="claw">
+            <div class="grabbed" id="grabbed"></div>
+            <div class="claw-head"></div>
+            <div class="claw-shaft"></div>
+            <span class="leg leg-l">
+              <span class="strut"></span>
+              <span class="lower"><span class="bone"></span></span>
+              <span class="elbow"></span>
+            </span>
+            <span class="leg leg-r">
+              <span class="strut"></span>
+              <span class="lower"><span class="bone"></span></span>
+              <span class="elbow"></span>
+            </span>
+            <div class="claw-wheel"></div>
+          </div>
+        </div>
+
+        <!-- 깨지는 연출 무대 (중앙) -->
+        <div class="stage" id="stage" aria-hidden="true">
+          <div class="tap-badge hidden" id="tapBadge"></div>
+          <div class="stage-ball hidden" id="stageBall">
+            <span class="stage-emoji" id="stageEmoji"></span>
+            <span class="crack-layer" id="crackLayer"></span>
+          </div>
+          <div class="shards" id="shards"></div>
+        </div>
+
+        <!-- 바닥 장난감 더미 -->
+        <div class="pile" id="pile" aria-hidden="true"></div>
+        <div class="floor" aria-hidden="true"></div>
+
+        <!-- 결과 슬립 -->
+        <div class="slip" id="slip" role="dialog" aria-modal="false" aria-label="오늘의 운세 결과" hidden>
+          <div class="slip-emoji" id="slipEmoji"></div>
+          <div class="slip-label">오늘의 한 줄 운세</div>
+          <p class="slip-fortune" id="slipFortune"></p>
+          <div class="slip-item">
+            <span class="slip-item-label">행운 아이템</span>
+            <span class="slip-item-value" id="slipItem"></span>
+          </div>
+          <div class="slip-date" id="slipDate"></div>
+        </div>
+      </div>
+
+      <!-- 안내 문구 -->
+      <p class="hint" id="hint">← → 로 집게를 옮기고, 핑크 버튼으로 뽑아보세요</p>
+    </section>
+
+    <!-- 컨트롤 패널 -->
+    <section class="panel" aria-label="조작 패널">
+      <div class="coin" id="coin" aria-label="코인 투입구" role="button" tabindex="0">
+        <span class="coin-sign">$</span>
+        <span class="coin-slot"></span>
+      </div>
+
+      <div class="stick-zone">
+        <button class="move-btn" id="leftBtn" aria-label="집게 왼쪽으로">◀</button>
+        <div class="stick" aria-hidden="true"><span class="stick-ball"></span></div>
+        <button class="move-btn" id="rightBtn" aria-label="집게 오른쪽으로">▶</button>
+      </div>
+
+      <button class="drop-btn" id="dropBtn" aria-label="뽑기">
+        <span class="drop-icon">✳</span>
+      </button>
+    </section>
+
+    <button class="reset" id="resetBtn" type="button">오늘 기록 지우고 다시 뽑기</button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
