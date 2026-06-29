@@ -142,6 +142,43 @@ function puff() {
   }
 }
 
+/* ===== 집게 다리 제어 =====
+   다리는 2단(윗마디 LEG_L1, 아랫마디 LEG_L2, 아랫마디 상대각 LEG_LOWER_DEG)으로 꺾여 있어
+   다리 각도 θ1 에 따라 양쪽 손끝 사이 거리(span)가 달라진다. CSS 값과 일치시켜야 함. */
+const legL = document.querySelector(".leg-l");
+const legR = document.querySelector(".leg-r");
+const LEG_L1 = 55;      // .strut height
+const LEG_L2 = 46;      // .bone 길이(손끝까지)
+const LEG_LOWER_DEG = 58; // .lower 상대 회전
+const OPEN_DEG = 60;    // 활짝(양다리 사이 120°)
+
+function legTipSpan(theta1) {
+  const t1 = (theta1 * Math.PI) / 180;
+  const phi = ((theta1 - LEG_LOWER_DEG) * Math.PI) / 180;
+  const tipX = LEG_L1 * Math.sin(t1) + LEG_L2 * Math.sin(phi);
+  return Math.abs(tipX) * 2;
+}
+// 손끝 사이 거리가 span(px)이 되는 다리 각도 θ1 (이분 탐색, 벌어진 구간 30~64°)
+function legAngleForSpan(span) {
+  let lo = 30, hi = 64;
+  for (let k = 0; k < 30; k++) {
+    const mid = (lo + hi) / 2;
+    if (legTipSpan(mid) < span) lo = mid; else hi = mid;
+  }
+  return (lo + hi) / 2;
+}
+function setLegs(deg) {
+  legL.style.transform = `rotate(${-deg}deg)`;
+  legR.style.transform = `rotate(${deg}deg)`;
+}
+function clearLegs() {
+  legL.style.transform = "";
+  legR.style.transform = "";
+  grabbed.style.width = "";
+  grabbed.style.height = "";
+  grabbed.style.top = "";
+}
+
 /* ===== 뽑기 시퀀스 ===== */
 async function drawFortune() {
   if (busy || crackMode) return;
@@ -160,20 +197,24 @@ async function drawFortune() {
     f: fortuneIdx,
   };
 
-  // 1) 하강 (더미에서 높이 쌓인 이모지는 덜 내려가도록)
+  // 1) 하강하며 120°로 활짝 벌리기
+  setLegs(OPEN_DEG);
   const descend = Math.max(150, 318 - PILE[capsule].y);
   cable.style.height = descend + "px";
   await sleep(620);
 
-  // 2) 잡기
-  claw.classList.add("closed");
-  await sleep(220);
+  // 2) 이모지 끝과 끝까지만 오므려 잡기
+  const grabSize = PILE[capsule].s;
+  setLegs(legAngleForSpan(grabSize));
   toys[capsule].classList.add("gone");
   setEmoji(grabbed, result.emoji);
+  grabbed.style.width = grabSize + "px";
+  grabbed.style.height = grabSize + "px";
+  grabbed.style.top = (100 - grabSize / 2) + "px"; // 손끝 위치에 맞춰 가운데 정렬
   claw.classList.add("holding");
-  await sleep(160);
+  await sleep(280);
 
-  // 3) 들어올리기
+  // 3) 잡은 채로 올라가기
   cable.style.height = "26px";
   await sleep(620);
 
@@ -185,6 +226,7 @@ async function drawFortune() {
   // 5) 무대로 넘기고 → 5번 두드리기 단계
   claw.classList.remove("holding");
   setEmoji(grabbed, "");
+  clearLegs(); // 다리 원위치
   enterCrackMode(result);
   busy = false;
 }
@@ -367,6 +409,7 @@ function reset() {
   moveCrane();
   cable.style.height = "26px";
   claw.classList.remove("closed");
+  clearLegs();
   setControls(true);
   hint.textContent = "← → 로 집게를 옮기고, 핑크 버튼으로 뽑아보세요";
   resetBtn.style.display = "none";
