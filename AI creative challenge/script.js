@@ -58,6 +58,19 @@ const hint = document.getElementById("hint");
 
 /* ===== 상태 ===== */
 const COUNT = FORTUNES.length;       // 10
+/* 바닥 절반을 꽉 채운 더미 (x: 가로 %, y: 바닥에서 띄운 px, s: 크기 px) — 왼→오 순서 */
+const PILE = [
+  { x: 11, y: 2,   s: 76 },  // 낮음
+  { x: 20, y: 66,  s: 78 },  // 높음
+  { x: 29, y: 2,   s: 82 },  // 낮음
+  { x: 38, y: 70,  s: 72 },  // 높음
+  { x: 47, y: 2,   s: 84 },  // 낮음
+  { x: 56, y: 66,  s: 74 },  // 높음
+  { x: 65, y: 2,   s: 80 },  // 낮음
+  { x: 74, y: 70,  s: 70 },  // 높음
+  { x: 83, y: 4,   s: 64 },  // 낮음
+  { x: 91, y: 62,  s: 54 },  // 높음
+];
 const MIN_PCT = 10;
 const MAX_PCT = 90;
 let index = Math.floor(COUNT / 2);
@@ -78,15 +91,17 @@ const todayStr = () => {
 function buildPile() {
   pile.innerHTML = "";
   toys = [];
-  const jitter = [2, -3, 4, -2, 3, -4, 2, -3, 3, -2];
+  const jitter = [3, -4, 2, -3, 0, 4, -2, 3, -4, 2];
   FORTUNES.forEach((f, i) => {
     const el = document.createElement("span");
     el.className = "toy";
     setEmoji(el, f.emoji);
-    el.style.left = posOf(i) + "%";
+    el.style.left = PILE[i].x + "%";
+    el.style.bottom = PILE[i].y + "px";
+    el.style.width = PILE[i].s + "px";
+    el.style.height = PILE[i].s + "px";
     el.style.setProperty("--rot", jitter[i] + "deg");
-    el.style.bottom = (i % 2 === 0 ? 0 : 7) + "px"; // 이모지를 7px씩 위아래로 엇갈리게
-    el.style.zIndex = String(i % 2 === 0 ? 3 : 4); // 겹쳐 쌓인 더미 느낌
+    el.style.zIndex = String(Math.round(PILE[i].y / 10) + 2); // 위층이 앞으로 오게 쌓인 느낌
     pile.appendChild(el);
     toys.push(el);
   });
@@ -98,7 +113,7 @@ function highlight() {
 }
 
 function moveCrane() {
-  crane.style.left = posOf(index) + "%";
+  crane.style.left = PILE[index].x + "%";
   highlight();
 }
 
@@ -145,8 +160,9 @@ async function drawFortune() {
     f: fortuneIdx,
   };
 
-  // 1) 하강
-  cable.style.height = "300px";
+  // 1) 하강 (더미에서 높이 쌓인 이모지는 덜 내려가도록)
+  const descend = Math.max(150, 318 - PILE[capsule].y);
+  cable.style.height = descend + "px";
   await sleep(620);
 
   // 2) 잡기
