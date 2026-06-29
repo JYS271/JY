@@ -622,6 +622,39 @@ body {
   100% { top: 42px; opacity: 0; transform: scaleY(0.15) rotate(240deg); }
 }
 
+.move-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+}
+/* 남은 뽑기 횟수 표시 패널 (직사각형 LED 느낌) */
+.credit-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 118px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #090b15, #171d2f);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.06);
+}
+.credit-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: #8c93b5;
+}
+.credit-count {
+  font-family: "Jua", sans-serif;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: #5fe6a8;
+  text-shadow: 0 0 8px rgba(95,230,168,0.55);
+  min-width: 16px;
+  text-align: center;
+}
 .stick-zone {
   display: flex;
   align-items: center;

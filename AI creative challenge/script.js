@@ -55,6 +55,7 @@ const rightBtn = document.getElementById("rightBtn");
 const dropBtn = document.getElementById("dropBtn");
 const resetBtn = document.getElementById("resetBtn");
 const hint = document.getElementById("hint");
+const creditCount = document.getElementById("creditCount");
 
 /* ===== 상태 ===== */
 const COUNT = FORTUNES.length;       // 10
@@ -79,6 +80,7 @@ let crackMode = false;               // 5번 두드리기 단계
 let crackCount = 0;
 let pendingFortune = null;
 let toys = [];
+let credits = 0;                     // 코인으로 충전되는 뽑기 가능 횟수
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const posOf = (i) => MIN_PCT + (i * (MAX_PCT - MIN_PCT)) / (COUNT - 1);
@@ -181,9 +183,18 @@ function clearLegs() {
 
 /* ===== 뽑기 시퀀스 ===== */
 async function drawFortune() {
-  if (busy || crackMode) return;
+  if (busy || crackMode || credits <= 0) return;
   busy = true;
+  credits -= 1;                 // 뽑기 1회 사용
+  creditCount.textContent = credits;
   setControls(false);
+
+  // 이전 결과/더미 정리 (반복 뽑기)
+  slip.classList.remove("show");
+  slip.hidden = true;
+  buildPile();
+  moveCrane();
+
   hint.textContent = "집게가 내려가요…";
 
   // 캡슐(이모지)은 내가 고른 것, 그 안의 운세 종이는 매번 랜덤
@@ -307,10 +318,11 @@ async function shatter() {
   stageBall.classList.add("hidden");
 
   showSlip(f);
-  save(f);
-  hint.textContent = "오늘의 운세가 나왔어요! ✨";
-  resetBtn.style.display = "block";
   busy = false;
+  setControls(true);
+  hint.textContent = credits > 0
+    ? "운세가 나왔어요! ✨ 남은 횟수로 또 뽑을 수 있어요"
+    : "운세가 나왔어요! ✨ 코인을 넣으면 또 뽑을 수 있어요";
 }
 
 /* 이모지를 쿠키 조각처럼 6등분해서 흩뿌리기 */
@@ -382,7 +394,14 @@ function showLockedResult(saved) {
 function setControls(enabled) {
   leftBtn.disabled = !enabled;
   rightBtn.disabled = !enabled;
-  dropBtn.disabled = !enabled;
+  // 뽑기 버튼은 크레딧이 있어야 활성화
+  dropBtn.disabled = !enabled || credits <= 0;
+}
+
+/* 남은 뽑기 횟수 표시 + 뽑기 버튼 활성화 갱신 (대기 중일 때만) */
+function updateCredits() {
+  creditCount.textContent = credits;
+  if (!busy && !crackMode) dropBtn.disabled = credits <= 0;
 }
 
 /* ===== 리셋 ===== */
@@ -434,6 +453,12 @@ function insertCoin() {
   token.className = "coin-token";
   coin.appendChild(token);
   setTimeout(() => token.remove(), 560);
+  // 코인 1개 = 뽑기 1회 충전
+  credits += 1;
+  updateCredits();
+  if (!busy && !crackMode && slip.hidden) {
+    hint.textContent = "코인 충전! 핑크 버튼으로 뽑아보세요";
+  }
 }
 coin.addEventListener("click", insertCoin);
 coin.addEventListener("keydown", (e) => {
@@ -458,12 +483,10 @@ function init() {
   buildPile();
   moveCrane();
   resetBtn.style.display = "none";
-  const saved = loadSaved();
-  if (saved) {
-    showLockedResult(saved);
-  } else {
-    setControls(true);
-  }
+  credits = 0;
+  updateCredits();          // 0회 → 뽑기 버튼 비활성
+  setControls(true);        // 좌우 버튼은 사용 가능
+  hint.textContent = "코인을 넣어 뽑기 횟수를 충전하세요";
 }
 
 init();

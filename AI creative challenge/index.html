@@ -83,10 +83,16 @@
         <span class="coin-slot"></span>
       </div>
 
-      <div class="stick-zone">
-        <button class="move-btn" id="leftBtn" aria-label="집게 왼쪽으로">◀</button>
-        <div class="stick" aria-hidden="true"><span class="stick-ball"></span></div>
-        <button class="move-btn" id="rightBtn" aria-label="집게 오른쪽으로">▶</button>
+      <div class="move-group">
+        <div class="credit-panel" aria-live="polite" aria-label="남은 뽑기 횟수">
+          <span class="credit-label">뽑기</span>
+          <span class="credit-count" id="creditCount">0</span>
+        </div>
+        <div class="stick-zone">
+          <button class="move-btn" id="leftBtn" aria-label="집게 왼쪽으로">◀</button>
+          <div class="stick" aria-hidden="true"><span class="stick-ball"></span></div>
+          <button class="move-btn" id="rightBtn" aria-label="집게 오른쪽으로">▶</button>
+        </div>
       </div>
 
       <button class="drop-btn" id="dropBtn" aria-label="뽑기">
