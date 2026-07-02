@@ -322,9 +322,7 @@ async function shatter() {
   showSlip(f);
   busy = false;
   setControls(true);
-  hint.textContent = credits > 0
-    ? "운세가 나왔어요! ✨ 남은 횟수로 또 뽑을 수 있어요"
-    : "운세가 나왔어요! ✨ 코인을 넣으면 또 뽑을 수 있어요";
+  hint.textContent = "운세가 나왔어요! ✨";
 }
 
 /* 이모지를 쿠키 조각처럼 6등분해서 흩뿌리기 */
