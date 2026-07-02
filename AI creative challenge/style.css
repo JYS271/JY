@@ -585,6 +585,11 @@ body {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
+.coin.spent {
+  cursor: default;
+  opacity: 0.5;
+  filter: grayscale(0.4);
+}
 .coin-sign {
   color: #3a3d57;
   font-family: "Jua", sans-serif;

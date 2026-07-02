@@ -81,6 +81,7 @@ let crackCount = 0;
 let pendingFortune = null;
 let toys = [];
 let credits = 0;                     // 코인으로 충전되는 뽑기 가능 횟수
+let coinUsed = false;                // 코인은 한 번만 투입 가능
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const posOf = (i) => MIN_PCT + (i * (MAX_PCT - MIN_PCT)) / (COUNT - 1);
@@ -429,6 +430,9 @@ function reset() {
   cable.style.height = "26px";
   claw.classList.remove("closed");
   clearLegs();
+  coinUsed = false;
+  coin.classList.remove("spent");
+  coin.removeAttribute("aria-disabled");
   setControls(true);
   hint.textContent = "← → 로 집게를 옮기고, 핑크 버튼으로 뽑아보세요";
   resetBtn.style.display = "none";
@@ -449,6 +453,8 @@ window.addEventListener("resize", () => {
 /* 코인 투입구 — 클릭하면 동전이 슬롯으로 쏙 */
 const coin = document.getElementById("coin");
 function insertCoin() {
+  if (coinUsed) return;        // 코인은 한 번만
+  coinUsed = true;
   const token = document.createElement("span");
   token.className = "coin-token";
   coin.appendChild(token);
@@ -456,6 +462,8 @@ function insertCoin() {
   // 코인 1개 = 뽑기 1회 충전
   credits += 1;
   updateCredits();
+  coin.classList.add("spent");
+  coin.setAttribute("aria-disabled", "true");
   if (!busy && !crackMode && slip.hidden) {
     hint.textContent = "코인 충전! 핑크 버튼으로 뽑아보세요";
   }
