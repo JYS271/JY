@@ -52,16 +52,21 @@
         <div class="pile" id="pile" aria-hidden="true"></div>
         <div class="floor" aria-hidden="true"></div>
 
-        <!-- 결과 슬립 -->
-        <div class="slip" id="slip" role="dialog" aria-modal="false" aria-label="오늘의 운세 결과" hidden>
-          <div class="slip-emoji" id="slipEmoji"></div>
-          <div class="slip-label">오늘의 한 줄 운세</div>
-          <p class="slip-fortune" id="slipFortune"></p>
-          <div class="slip-item">
-            <span class="slip-item-label">행운 아이템</span>
-            <span class="slip-item-value" id="slipItem"></span>
+        <!-- 결과: 편지 봉투 -->
+        <div class="envelope" id="envelope" role="dialog" aria-modal="false" aria-label="오늘의 운세 결과" hidden>
+          <div class="slip" id="slip">
+            <div class="slip-emoji" id="slipEmoji"></div>
+            <div class="slip-label">오늘의 한 줄 운세</div>
+            <p class="slip-fortune" id="slipFortune"></p>
+            <div class="slip-item">
+              <span class="slip-item-label">행운 아이템</span>
+              <span class="slip-item-value" id="slipItem"></span>
+            </div>
+            <div class="slip-date" id="slipDate"></div>
           </div>
-          <div class="slip-date" id="slipDate"></div>
+          <div class="env-back" aria-hidden="true"></div>
+          <div class="env-pocket" aria-hidden="true"></div>
+          <div class="env-flap" aria-hidden="true"></div>
         </div>
       </div>
 

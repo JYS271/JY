@@ -44,6 +44,7 @@ const crackLayer = document.getElementById("crackLayer");
 const shardsBox = document.getElementById("shards");
 const tapBadge = document.getElementById("tapBadge");
 
+const envelope = document.getElementById("envelope");
 const slip = document.getElementById("slip");
 const slipEmoji = document.getElementById("slipEmoji");
 const slipFortune = document.getElementById("slipFortune");
@@ -191,8 +192,8 @@ async function drawFortune() {
   setControls(false);
 
   // 이전 결과/더미 정리 (반복 뽑기)
-  slip.classList.remove("show");
-  slip.hidden = true;
+  envelope.classList.remove("open");
+  envelope.hidden = true;
   buildPile();
   moveCrane();
 
@@ -355,9 +356,11 @@ function showSlip(f) {
   slipFortune.textContent = f.text;
   slipItem.textContent = f.item;
   slipDate.textContent = todayStr().replace(/-/g, ".");
-  slip.hidden = false;
-  void slip.offsetWidth;
-  slip.classList.add("show");
+  // 봉투 등장 → 뚜껑 열림 → 편지 올라옴
+  envelope.hidden = false;
+  envelope.classList.remove("open");
+  void envelope.offsetWidth;
+  envelope.classList.add("open");
 }
 
 /* ===== 저장 / 복원 ===== */
@@ -408,8 +411,8 @@ function updateCredits() {
 /* ===== 리셋 ===== */
 function reset() {
   try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* 무시 */ }
-  slip.classList.remove("show");
-  slip.hidden = true;
+  envelope.classList.remove("open");
+  envelope.hidden = true;
 
   crackMode = false;
   crackCount = 0;
@@ -447,7 +450,7 @@ resetBtn.addEventListener("click", reset);
 
 /* 창 크기가 바뀌면 집게를 선택 이모지에 다시 정렬 (뽑는 중이 아닐 때만) */
 window.addEventListener("resize", () => {
-  if (!busy && !crackMode && slip.hidden) moveCrane();
+  if (!busy && !crackMode && envelope.hidden) moveCrane();
 });
 
 /* 코인 투입구 — 클릭하면 동전이 슬롯으로 쏙 */

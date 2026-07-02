@@ -454,35 +454,102 @@ body {
   100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.3); }
 }
 
-/* ===== 결과 슬립 ===== */
-.slip {
+/* ===== 결과: 편지 봉투 ===== */
+.envelope {
   position: absolute;
   left: 50%;
-  bottom: 14px;
-  transform: translateX(-50%) translateY(20px);
+  bottom: 12px;
+  transform: translateX(-50%);
   width: 84%;
-  padding: 18px 18px 14px;
-  background:
-    linear-gradient(180deg, var(--paper), #f5ead2);
-  color: var(--ink);
-  border-radius: 14px;
-  text-align: center;
+  height: 265px;
   z-index: 7;
   opacity: 0;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.2,.9,.3,1.2);
+  transition: opacity 0.25s ease;
+  pointer-events: none;
 }
-.slip::before, .slip::after {
+.envelope.open { opacity: 1; }
+
+/* 편지지 — 봉투에서 위로 올라온다 */
+.slip {
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 44px;                      /* 봉투 안 깊숙이 꽂혀 V자 구멍을 편지지로 채움 */
+  padding: 16px 16px 60px;           /* 내용은 위로, 아래 여백이 봉투 속으로 들어감 */
+  background: linear-gradient(180deg, var(--paper), #f5ead2);
+  color: var(--ink);
+  border-radius: 8px 8px 5px 5px;
+  text-align: center;
+  z-index: 3;                        /* 봉투 앞면보다 뒤 */
+  box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  transform: translateY(230px);      /* 닫힘: 봉투 안으로 내려가 숨음 */
+  opacity: 0;
+}
+.envelope.open .slip {
+  animation: letterOut 0.75s cubic-bezier(.2,.85,.25,1) 0.5s both;
+}
+@keyframes letterOut {
+  0%   { transform: translateY(230px); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+/* 봉투 안쪽(어두운 내부) — V자 입구로 들여다보임 */
+.env-back {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 100px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #7c6636, #a68f5f);
+  box-shadow: inset 0 4px 8px rgba(0,0,0,0.5);
+  z-index: 2;
+}
+
+/* 봉투 앞면(주머니) — 윗변 가운데가 V자로 파여 입구가 됨 */
+.env-pocket {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 100px;
+  border-radius: 9px;
+  background: linear-gradient(180deg, #ecdfbe, #d7c496);
+  box-shadow: inset 0 2px 3px rgba(255,255,255,0.5), 0 8px 18px rgba(0,0,0,0.45);
+  z-index: 4;                        /* 편지지 아랫부분을 가림 */
+  clip-path: polygon(0 0, 50% 46px, 100% 0, 100% 100%, 0 100%);
+}
+
+/* 봉투 뚜껑 — 위 축에서 열린다 */
+.env-flap {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 40px;                      /* 힌지(윗변)가 봉투 입구 y100에 딱 붙게 */
+  height: 60px;
+  z-index: 5;
+  transform-origin: top center;
+  transform: rotateX(0deg);          /* 닫힘: 아래로 덮음 */
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, #e6d7b2, #ccb884);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+.env-flap::after {                   /* 밀랍 씰 */
   content: "";
   position: absolute;
-  top: 0; bottom: 0;
-  width: 10px;
-  background:
-    radial-gradient(circle at center, transparent 3px, var(--paper) 3.5px) 0 0 / 10px 14px;
+  left: 50%; top: 9px;
+  width: 18px; height: 18px;
+  margin-left: -9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #ff90b1, #c9366a);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
 }
-.slip::before { left: 0; }
-.slip::after { right: 0; }
-.slip.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.envelope.open .env-flap {
+  animation: flapOpen 0.5s cubic-bezier(.5,.02,.35,1) forwards;
+}
+@keyframes flapOpen {
+  0%   { transform: rotateX(0deg); z-index: 6; opacity: 1; }
+  50%  { transform: rotateX(-92deg); z-index: 6; opacity: 1; }
+  51%  { z-index: 2; }                 /* 90° 넘으면 편지지 뒤로 */
+  72%  { opacity: 1; }
+  100% { transform: rotateX(-150deg); z-index: 2; opacity: 0; }  /* 다 열리면 삼각형 사라짐 */
+}
 .slip-emoji {
   width: 48px;
   height: 48px;
