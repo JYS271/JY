@@ -486,12 +486,13 @@ body {
   opacity: 0;
 }
 .envelope.open .slip {
-  animation: letterOut 0.75s cubic-bezier(.2,.85,.25,1) 0.5s both;
+  animation: letterOut 0.85s cubic-bezier(.22,.72,.2,1) 0.4s both;
 }
 @keyframes letterOut {
   0%   { transform: translateY(230px); opacity: 0; }
-  18%  { opacity: 1; }
-  100% { transform: translateY(0); opacity: 1; }
+  16%  { opacity: 1; }
+  78%  { transform: translateY(-7px); }   /* 살짝 올라갔다가 */
+  100% { transform: translateY(0); opacity: 1; }  /* 부드럽게 정착 */
 }
 
 /* 봉투 안쪽(어두운 내부) — V자 입구로 들여다보임 */
@@ -541,14 +542,14 @@ body {
   box-shadow: 0 1px 2px rgba(0,0,0,0.4);
 }
 .envelope.open .env-flap {
-  animation: flapOpen 0.5s cubic-bezier(.5,.02,.35,1) forwards;
+  animation: flapOpen 0.55s cubic-bezier(.32,.14,.22,1) forwards;
 }
 @keyframes flapOpen {
   0%   { transform: rotateX(0deg); z-index: 6; opacity: 1; }
-  50%  { transform: rotateX(-92deg); z-index: 6; opacity: 1; }
-  51%  { z-index: 2; }                 /* 90° 넘으면 편지지 뒤로 */
-  72%  { opacity: 1; }
-  100% { transform: rotateX(-150deg); z-index: 2; opacity: 0; }  /* 다 열리면 삼각형 사라짐 */
+  48%  { transform: rotateX(-90deg); z-index: 6; opacity: 1; }
+  49%  { z-index: 2; }                 /* 90° 넘으면 편지지 뒤로 */
+  74%  { opacity: 1; }
+  100% { transform: rotateX(-156deg); z-index: 2; opacity: 0; }  /* 다 열리면 삼각형 사라짐 */
 }
 .slip-emoji {
   width: 48px;
