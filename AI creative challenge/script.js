@@ -484,10 +484,6 @@ document.addEventListener("keydown", (e) => {
 
 /* ===== 초기화 ===== */
 function init() {
-  // 배경 흐릿한 인형들
-  setEmoji(document.querySelector(".plush-1"), "🐰");
-  setEmoji(document.querySelector(".plush-2"), "🐻");
-  setEmoji(document.querySelector(".plush-3"), "🦙");
   buildPile();
   moveCrane();
   resetBtn.style.display = "none";
